@@ -11,4 +11,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 788438d127b1e5c4ca3bdae600b21a96, type: 3}
   m_Name: Shape
   m_EditorClassIdentifier: 
-  planetRaidus: 3.08
+  planetRaidus: 2.9
+  noiseLayers:
+  - enabled: 1
+    noiseSettings:
+      strength: 0.2
+      numLayers: 4
+      baseRoughness: 2.32
+      roughness: 0.2
+      persistance: 1.12
+      centre: {x: 0, y: 0, z: 0}
+      minValue: 2.5
+    useFirstLayerAsMask: 0
+  - enabled: 1
+    noiseSettings:
+      strength: 5.39
+      numLayers: 5
+      baseRoughness: 2.5
+      roughness: 0.6
+      persistance: 0.7
+      centre: {x: 5.53, y: 4.59, z: 1.44}
+      minValue: 2.37
+    useFirstLayerAsMask: 1
