@@ -8,22 +8,37 @@ public class Planet : MonoBehaviour {
     // add range
     [Range(2,256)]
     public int resolution = 10;
+    public bool autoUpdate = true;
+    public ShapeSettings shapeSettings;
+    public ColourSettings colourSettings;
+
+    // foldout bool
+
+    [HideInInspector]
+    public bool shapeSettingFoldout;
+
+    [HideInInspector]
+    public bool colourSettingFoldout;
+
+    //Take into account details of the Sphere for generation
+    ShapeGenerator shapeGenerator;
 
     [SerializeField, HideInInspector]
     MeshFilter[] meshFilters;
     TerrainFace[] terrainFaces;
 
     // To work in on editor
-    private void OnValidate()
-    {
-        Initialize();
-        GenerateMesh();
-    }
+
+    //private void OnValidate()
+    //{
+    //    GeneratePlanet();
+    //}
 
     void Initialize()
     {
         // Dont want to make 6 sided mesh filter everyime, so only called under special conditions
 
+        shapeGenerator = new ShapeGenerator(shapeSettings);
         if(meshFilters == null || meshFilters.Length == 0)
         {
             meshFilters = new MeshFilter[6];
@@ -47,7 +62,33 @@ public class Planet : MonoBehaviour {
 
             }
             //set terrain face for each side of the cube
-            terrainFaces[i] = new TerrainFace(meshFilters[i].sharedMesh, resolution, directions[i]);
+            terrainFaces[i] = new TerrainFace(shapeGenerator,meshFilters[i].sharedMesh, resolution, directions[i]);
+        }
+    }
+
+    public void GeneratePlanet()  // called to Generate planet
+    {
+        Initialize();
+        GenerateMesh();
+        GenerateColours();
+    }
+    
+    public void onShapeSettingsUpdated() // called only when the shape setting changed
+    {
+        if (autoUpdate)
+        {
+
+            Initialize();
+            GenerateMesh();
+        }
+    }
+
+    public void OnColourSettingsUpdated() // called only when the colour setting are changed
+    {
+        if (autoUpdate)
+        {
+            Initialize();
+            GenerateColours();
         }
     }
 
@@ -56,6 +97,15 @@ public class Planet : MonoBehaviour {
         foreach (TerrainFace face in terrainFaces)
         {
             face.ConsructMesh();
+        }
+    }
+
+    void GenerateColours()
+    {
+        // loop through meshes and sets the colour to the desired colour from colourSettings
+        foreach (MeshFilter m in meshFilters)
+        {
+            m.GetComponent<MeshRenderer>().sharedMaterial.color = colourSettings.planetColour;
         }
     }
 }

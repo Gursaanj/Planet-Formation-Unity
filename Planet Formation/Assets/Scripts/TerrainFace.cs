@@ -8,9 +8,12 @@ public class TerrainFace {
     Vector3 localUp;
     Vector3 axisA;
     Vector3 axisB;
+    // add access to the shape generator settings for the editor
+    ShapeGenerator shapeGenerator;
 
-    public TerrainFace(Mesh mesh, int resolution, Vector3 localUp)
+    public TerrainFace(ShapeGenerator shapeGenerator,Mesh mesh, int resolution, Vector3 localUp)
     {
+        this.shapeGenerator = shapeGenerator;
         this.mesh = mesh;
         this.resolution = resolution;
         this.localUp = localUp;
@@ -53,7 +56,8 @@ public class TerrainFace {
                 Vector3 pointOnUnitCube = localUp + (percent.x - .5f) * 2 * axisA + (percent.y - .5f) * 2 * axisB;
                 //To pop the face of cube onto the sphere
                 Vector3 pointOnUnitSphere = pointOnUnitCube.normalized;
-                vertices[i] = pointOnUnitSphere;
+                //vertices[i] = pointOnUnitSphere; - need to make sure it passes through the shape generator
+                vertices[i] = shapeGenerator.CalculatePointOnPlanet(pointOnUnitSphere);
                 normals[i] = vertices[i].normalized;
 
                 // time to generate the triangles according to the index, in a clockwise format, so that the mesh would orient the right way
